@@ -27,4 +27,5 @@ class AIChatApp:
         )
 
 if __name__ == '__main__':
-    pass
+    app = AIChatApp()
+    print("AI Chat App initialized successfully.")

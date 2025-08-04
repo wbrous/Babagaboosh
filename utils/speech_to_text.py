@@ -1,7 +1,7 @@
 from RealtimeSTT import AudioToTextRecorder
 
 class SpeechToText:
-    def __init__(self, start_key='F4'):
+    def __init__(self):
         self.recorder = AudioToTextRecorder(
             spinner=False,
             model="tiny",
