@@ -23,7 +23,7 @@ with open(yaml_config_path, 'r') as file:
 
 class AIChatApp:
     def __init__(self):
-        self.speech_to_text = SpeechToText()
+        self.speech_to_text = SpeechToText(config['stt']['model'], config['stt']['language'])
         self.audio_manager = AudioManager()
         self.google_tts_manager = GoogleTTSManager(language=config['tts']['language'])
         self.gemini_ai_manager = GeminiAIManager(

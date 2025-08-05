@@ -2,11 +2,11 @@ from RealtimeSTT import AudioToTextRecorder
 from rich import print
 
 class SpeechToText:
-    def __init__(self):
+    def __init__(self, model="base", language="en"):
         self.recorder = AudioToTextRecorder(
             spinner=False,
-            model="base",  # Use base model for better accuracy
-            language="en",
+            model=model,  # Use base model for better accuracy
+            language=language,
             silero_sensitivity=0.6,  # Higher sensitivity
             webrtc_sensitivity=2,  # Lower value = more sensitive
             post_speech_silence_duration=1.0,  # Wait longer for complete speech

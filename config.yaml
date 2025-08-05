@@ -24,3 +24,17 @@ ai:
     Okay, let the conversation begin!
 tts:
   language: "en"
+  region: "us-west-2"
+  voice: "Joanna"
+stt:
+  model: "base"
+  language: "en"
+obs:
+  enabled: true
+  filter:
+    source_name: "YourSourceNameHere"
+    filter_name: "YourFilterNameHere"
+  image:
+    scene_name: "YourSceneNameHere"
+    source_name: "YourImageSourceNameHere"
+    
