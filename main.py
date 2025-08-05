@@ -21,7 +21,8 @@ class AIChatApp:
         self.polly_tts_manager = PollyTTSManager(
             aws_access_key_id=os.getenv("AMAZON_POLLY_ACCESS_KEY_ID"),
             aws_secret_access_key=os.getenv("AMAZON_POLLY_SECRET_ACCESS_KEY"),
-            region_name=config['tts']['region']
+            region_name=config['tts']['region'],
+            engine=config['tts']['engine']
         )
         self.gemini_ai_manager = GeminiAIManager(
             api_key=os.getenv("GEMINI_API_KEY"),
@@ -30,7 +31,7 @@ class AIChatApp:
         )
     
     def begin_conversation(self):
-        print("Starting conversation with AI...")
+        print("[yellow]Starting conversation with AI...[/yellow]")
         try:
             while True:
                 print("\n[green]Press F4 to start recording...[/green]")

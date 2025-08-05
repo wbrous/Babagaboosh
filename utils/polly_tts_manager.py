@@ -3,7 +3,8 @@ import os
 import tempfile
 
 class PollyTTSManager:
-    def __init__(self, aws_access_key_id=None, aws_secret_access_key=None, region_name='us-east-1'):
+    def __init__(self, aws_access_key_id=None, aws_secret_access_key=None, region_name='us-east-1', engine='standard'):
+        self.engine = engine
         self.polly = boto3.client(
             'polly',
             aws_access_key_id=aws_access_key_id,
@@ -101,7 +102,8 @@ class PollyTTSManager:
             Text=text,
             VoiceId=voice_id,
             OutputFormat=output_format,
-            TextType='ssml' if text.strip().startswith('<speak>') else 'text'
+            TextType='ssml' if text.strip().startswith('<speak>') else 'text',
+            Engine=self.engine
         )
         audio_stream = response.get('AudioStream')
         if audio_stream:
