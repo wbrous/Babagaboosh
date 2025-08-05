@@ -64,12 +64,15 @@ class AIChatApp:
                     response = self.gemini_ai_manager.generate_response(user_input)
                     print(f"\n[blue]AI Response: {response}[/blue]")
                     try:
-                        file_path = self.polly_tts_manager.text_to_speech(response, "response.mp3", True, self.config['tts']['voice'], 'mp3')
+                        file_path = self.polly_tts_manager.text_to_speech(response, None, True, self.config['tts']['voice'], 'mp3')
                     except Exception as e:
                         print(f"[red]Error with Polly TTS: {e}[/red]")
                         print("[yellow]Falling back to Google TTS...[/yellow]")
-                        file_path = self.google_tts_manager.text_to_speech(response, "response.mp3")
+                        file_path = self.google_tts_manager.text_to_speech(response, None)
+                    
                     self.audio_manager.load_audio(file_path)
+
+                    print(f"[yellow]Playing audio response from: audio/{os.path.basename(file_path) if file_path else 'unknown'}[/yellow]")
                     self.audio_manager.play_audio(file_path)
 
                     if self.obs_enabled:
@@ -129,9 +132,9 @@ class AIChatApp:
 
 def load_config():
     """Load configuration from YAML file."""
-    yaml_config_path = os.path.join(os.path.dirname(__file__), 'self.config.yaml')
+    yaml_config_path = os.path.join(os.path.dirname(__file__), 'config.yaml')
     if not os.path.exists(yaml_config_path):
-        print(f"self.config file not found at {yaml_config_path}. Please ensure it exists.")
+        print(f"config file not found at {yaml_config_path}. Please ensure it exists.")
         sys.exit(1)
 
     with open(yaml_config_path, 'r') as file:

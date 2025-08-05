@@ -1,17 +1,18 @@
 from gtts import gTTS
 import tempfile
+import os
 
 class GoogleTTSManager:
     def __init__(self, language='en'):
         self.language = language
 
     def text_to_speech(self, text, filename=None):
+        """Convert text to speech using Google TTS and save to a file."""
         tts = gTTS(text=text, lang=self.language)
+
         if filename is None:
-            with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
-                temp_filename = tmp_file.name
-                tts.save(temp_filename)
-            return temp_filename
-        else:
-            tts.save(filename)
-            return filename
+            fd, filename = tempfile.mkstemp(dir=os.path.join(os.path.dirname(__file__), '..', 'audio'), prefix='google', suffix='.mp3')
+            os.close(fd)
+        
+        tts.save(filename)
+        return filename

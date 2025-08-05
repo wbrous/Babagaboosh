@@ -112,8 +112,9 @@ class PollyTTSManager:
                     f.write(audio_stream.read())
                 return output_path
             else:
-                fd, output_path = tempfile.mkstemp(suffix=f'.{output_format}')
+                fd, output_path = tempfile.mkstemp(dir=os.path.join(os.path.dirname(__file__), '..', 'audio'), prefix='polly', suffix=f'.{output_format}')
                 os.close(fd)
+
                 with open(output_path, 'wb') as f:
                     f.write(audio_stream.read())
             return output_path
