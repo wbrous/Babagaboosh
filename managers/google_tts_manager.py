@@ -11,7 +11,7 @@ class GoogleTTSManager:
         tts = gTTS(text=text, lang=self.language)
 
         if filename is None:
-            fd, filename = tempfile.mkstemp(dir=os.path.join(os.path.dirname(__file__), '..', 'audio'), prefix='google', suffix='.mp3')
+            fd, filename = tempfile.mkstemp(dir=os.path.join(os.path.dirname(__file__), '..', 'audio'), prefix='google_', suffix='.mp3')
             os.close(fd)
         
         tts.save(filename)
