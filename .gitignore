@@ -4,5 +4,4 @@
 # Python
 realtimesst.log
 __pycache__/
-utils/__pycache__/
 *.pyc
