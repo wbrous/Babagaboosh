@@ -41,9 +41,13 @@ class AIChatApp:
                 if user_input:
                     print(f"\n[blue]You said: {user_input}[/blue]\n")
                     response = self.gemini_ai_manager.generate_response(user_input)
-                    print(f"\n[yellow]AI Response: {response}[/yellow]")
-
-                    file_path = self.google_tts_manager.text_to_speech(response, "response.mp3")
+                    print(f"\n[blue]AI Response: {response}[/blue]")
+                    try:
+                        file_path = self.polly_tts_manager.text_to_speech(response, "response.mp3", True, config['tts']['voice'], 'mp3')
+                    except Exception as e:
+                        print(f"[red]Error with Polly TTS: {e}[/red]")
+                        print("[yellow]Falling back to Google TTS...[/yellow]")
+                        file_path = self.google_tts_manager.text_to_speech(response, "response.mp3")
                     self.audio_manager.load_audio(file_path)
                     self.audio_manager.play_audio(file_path)
                     time.sleep(self.audio_manager.get_audio_length(file_path))
