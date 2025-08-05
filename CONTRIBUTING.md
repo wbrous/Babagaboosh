@@ -1,7 +1,7 @@
-<!-- CONTRIBUTING.md: Guidelines for contributing to the AIChatApp project -->
-# Contributing to AIChatApp
+<!-- CONTRIBUTING.md: Guidelines for contributing to the Babagaboosh project -->
+# Contributing to Babagaboosh
 
-Thank you for your interest in contributing to AIChatApp! We welcome bug reports, feature requests, and pull requests.
+Thank you for your interest in contributing to Babagaboosh! We welcome bug reports, feature requests, and pull requests.
 
 ## Getting Started
 1. Fork the repository on GitHub.
@@ -38,4 +38,4 @@ Thank you for your interest in contributing to AIChatApp! We welcome bug reports
 - Provide steps to reproduce and include any relevant logs or screenshots.
 
 ## Thank You
-Your contributions help improve AIChatApp for everyone. We appreciate your time and effort!
+Your contributions help improve Babagaboosh for everyone. We appreciate your time and effort!
