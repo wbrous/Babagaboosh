@@ -17,28 +17,29 @@ class AIChatApp:
     def __init__(self):
         """Initialize the AI Chat Application."""
         print("[yellow]Initializing AI Chat App...[/yellow]")
+        self.config = load_config()
         self.audio_manager = AudioManager()
-        self.google_tts_manager = GoogleTTSManager(language=config['tts']['language'])
-        self.speech_to_text = SpeechToText(config['stt']['model'], config['stt']['language'])
-        self.obs_enabled = config['obs']['enabled']
+        self.google_tts_manager = GoogleTTSManager(language=self.config['tts']['language'])
+        self.speech_to_text = SpeechToText(self.config['stt']['model'], self.config['stt']['language'])
+        self.obs_enabled = self.config['obs']['enabled']
         if self.obs_enabled:
             self.obs_websockets_manager = OBSWebsocketsManager(
-                host=config['obs']['host'],
-                port=config['obs']['port'],
-                password=lambda: config['obs']['password'] if config['obs']['enabled'] else ''
+                host=self.config['obs']['host'],
+                port=self.config['obs']['port'],
+                password=lambda: self.config['obs']['password'] if self.config['obs']['enabled'] else ''
             )
         else:
-            print("[yellow]OBS WebSocket is disabled in the configuration.[/yellow]")
+            print("[yellow]OBS WebSocket is disabled in the self.configuration.[/yellow]")
         self.polly_tts_manager = PollyTTSManager(
             aws_access_key_id=os.getenv("AMAZON_POLLY_ACCESS_KEY_ID"),
             aws_secret_access_key=os.getenv("AMAZON_POLLY_SECRET_ACCESS_KEY"),
-            region_name=config['tts']['region'],
-            engine=config['tts']['engine']
+            region_name=self.config['tts']['region'],
+            engine=self.config['tts']['engine']
         )
         self.gemini_ai_manager = GeminiAIManager(
             api_key=os.getenv("GEMINI_API_KEY"),
-            model=config['ai']['model'],
-            system_instruction=config['ai']['system_instruction']
+            model=self.config['ai']['model'],
+            system_instruction=self.config['ai']['system_instruction']
         )
 
         print("[green]AI Chat App initialized successfully.[/green]")
@@ -63,7 +64,7 @@ class AIChatApp:
                     response = self.gemini_ai_manager.generate_response(user_input)
                     print(f"\n[blue]AI Response: {response}[/blue]")
                     try:
-                        file_path = self.polly_tts_manager.text_to_speech(response, "response.mp3", True, config['tts']['voice'], 'mp3')
+                        file_path = self.polly_tts_manager.text_to_speech(response, "response.mp3", True, self.config['tts']['voice'], 'mp3')
                     except Exception as e:
                         print(f"[red]Error with Polly TTS: {e}[/red]")
                         print("[yellow]Falling back to Google TTS...[/yellow]")
@@ -73,21 +74,21 @@ class AIChatApp:
 
                     if self.obs_enabled:
                         self.obs_websockets_manager.set_source_visibility(
-                            scene_name=config['obs']['image']['scene_name'],
-                            source_name=config['obs']['image']['source_name'],
+                            scene_name=self.config['obs']['image']['scene_name'],
+                            source_name=self.config['obs']['image']['source_name'],
                             source_visible=True
                         )
 
-                        if config['obs']['head']['enabled']:
+                        if self.config['obs']['head']['enabled']:
                             self.obs_websockets_manager.set_source_visibility(
-                                scene_name=config['obs']['head']['scene_name'],
-                                source_name=config['obs']['head']['source_name'],
+                                scene_name=self.config['obs']['head']['scene_name'],
+                                source_name=self.config['obs']['head']['source_name'],
                                 source_visible=True
                             )
 
                         self.obs_websockets_manager.set_filter_visibility(
-                            source_name=config['obs']['image']['source_name'],
-                            filter_name=config['obs']['image']['filter_name'],
+                            source_name=self.config['obs']['image']['source_name'],
+                            filter_name=self.config['obs']['image']['filter_name'],
                             filter_enabled=True
                         )
                     
@@ -95,22 +96,22 @@ class AIChatApp:
 
                     if self.obs_enabled:
                         self.obs_websockets_manager.set_source_visibility(
-                            scene_name=config['obs']['image']['scene_name'],
-                            source_name=config['obs']['image']['source_name'],
+                            scene_name=self.config['obs']['image']['scene_name'],
+                            source_name=self.config['obs']['image']['source_name'],
                             source_visible=False
                         )
 
-                        if config['obs']['head']['enabled']:
+                        if self.config['obs']['head']['enabled']:
                             self.obs_websockets_manager.set_source_visibility(
-                                scene_name=config['obs']['head']['scene_name'],
-                                source_name=config['obs']['head']['source_name'],
+                                scene_name=self.config['obs']['head']['scene_name'],
+                                source_name=self.config['obs']['head']['source_name'],
                                 source_visible=False
                             )
 
-                        if config['obs']['filter']['enabled']:
+                        if self.config['obs']['filter']['enabled']:
                             self.obs_websockets_manager.set_filter_visibility(
-                                source_name=config['obs']['filter']['source_name'],
-                                filter_name=config['obs']['filter']['filter_name'],
+                                source_name=self.config['obs']['filter']['source_name'],
+                                filter_name=self.config['obs']['filter']['filter_name'],
                                 filter_enabled=False
                             )
 
@@ -126,32 +127,11 @@ class AIChatApp:
             print(f"[red]Error: {e}[/red]")
             self.speech_to_text.shutdown()
 
-def setup_obs():
-    """Setup OBS WebSocket connection if enabled."""
-
-    if config['obs']['enabled'] == True:
-        from obswebsocket import obsws, requests
-        obs = None  # Global OBS instance
-        try:
-            obs = obsws(
-                host=os.getenv('OBS_WEBSOCKET_HOST', 'localhost'),
-                port=int(os.getenv('OBS_WEBSOCKET_PORT', 4455)),
-                password=os.getenv('OBS_WEBSOCKET_PASSWORD', '') if os.getenv('USE_OBS_WEBSOCKET_PASSWORD', '0') == '1' else ''
-            )
-            obs.connect()
-            print("[green]Connected to OBS WebSocket successfully[/green]")
-            return obs, requests
-        except Exception as e:
-            print(f"[red]Error connecting to OBS WebSocket: {e}[/red]")
-            return None, None
-    else:
-        return None, None  # OBS not used
-
 def load_config():
     """Load configuration from YAML file."""
-    yaml_config_path = os.path.join(os.path.dirname(__file__), 'config.yaml')
+    yaml_config_path = os.path.join(os.path.dirname(__file__), 'self.config.yaml')
     if not os.path.exists(yaml_config_path):
-        print(f"Config file not found at {yaml_config_path}. Please ensure it exists.")
+        print(f"self.config file not found at {yaml_config_path}. Please ensure it exists.")
         sys.exit(1)
 
     with open(yaml_config_path, 'r') as file:
@@ -160,6 +140,5 @@ def load_config():
     return config
 
 if __name__ == '__main__':
-    config = load_config()
     app = AIChatApp()
     app.begin_conversation()
