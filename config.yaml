@@ -48,9 +48,14 @@ stt:
   language: "en"
 obs:
   enabled: false
-  filter:
-    source_name: "YourSourceNameHere"
-    filter_name: "YourFilterNameHere"
   image:
     scene_name: "YourSceneNameHere"
     source_name: "YourImageSourceNameHere"
+  head:
+    enabled: false
+    scene_name: "YourSceneNameHere"
+    source_name: "YourHeadSourceNameHere"
+  filter:
+    enabled: false
+    source_name: "YourSourceNameHere"
+    filter_name: "YourFilterNameHere"

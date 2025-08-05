@@ -15,9 +15,20 @@ dotenv.load_dotenv(
 
 class AIChatApp:
     def __init__(self):
-        self.speech_to_text = SpeechToText(config['stt']['model'], config['stt']['language'])
+        """Initialize the AI Chat Application."""
+        print("[yellow]Initializing AI Chat App...[/yellow]")
         self.audio_manager = AudioManager()
         self.google_tts_manager = GoogleTTSManager(language=config['tts']['language'])
+        self.speech_to_text = SpeechToText(config['stt']['model'], config['stt']['language'])
+        self.obs_enabled = config['obs']['enabled']
+        if self.obs_enabled:
+            self.obs_websockets_manager = OBSWebsocketsManager(
+                host=config['obs']['host'],
+                port=config['obs']['port'],
+                password=lambda: config['obs']['password'] if config['obs']['enabled'] else ''
+            )
+        else:
+            print("[yellow]OBS WebSocket is disabled in the configuration.[/yellow]")
         self.polly_tts_manager = PollyTTSManager(
             aws_access_key_id=os.getenv("AMAZON_POLLY_ACCESS_KEY_ID"),
             aws_secret_access_key=os.getenv("AMAZON_POLLY_SECRET_ACCESS_KEY"),
@@ -29,6 +40,14 @@ class AIChatApp:
             model=config['ai']['model'],
             system_instruction=config['ai']['system_instruction']
         )
+
+        print("[green]AI Chat App initialized successfully.[/green]")
+
+        self.audio_manager.load_audio(os.path.join(os.path.dirname(__file__), 'start.mp3'))
+        self.audio_manager.play_audio(os.path.join(os.path.dirname(__file__), 'start.mp3'))
+        time.sleep(self.audio_manager.get_audio_length(os.path.join(os.path.dirname(__file__), 'start.mp3')))
+        self.audio_manager.unload_audio(os.path.join(os.path.dirname(__file__), 'start.mp3'), remove=False)
+
     
     def begin_conversation(self):
         print("[yellow]Starting conversation with AI...[/yellow]")
@@ -51,7 +70,50 @@ class AIChatApp:
                         file_path = self.google_tts_manager.text_to_speech(response, "response.mp3")
                     self.audio_manager.load_audio(file_path)
                     self.audio_manager.play_audio(file_path)
+
+                    if self.obs_enabled:
+                        self.obs_websockets_manager.set_source_visibility(
+                            scene_name=config['obs']['image']['scene_name'],
+                            source_name=config['obs']['image']['source_name'],
+                            source_visible=True
+                        )
+
+                        if config['obs']['head']['enabled']:
+                            self.obs_websockets_manager.set_source_visibility(
+                                scene_name=config['obs']['head']['scene_name'],
+                                source_name=config['obs']['head']['source_name'],
+                                source_visible=True
+                            )
+
+                        self.obs_websockets_manager.set_filter_visibility(
+                            source_name=config['obs']['image']['source_name'],
+                            filter_name=config['obs']['image']['filter_name'],
+                            filter_enabled=True
+                        )
+                    
                     time.sleep(self.audio_manager.get_audio_length(file_path))
+
+                    if self.obs_enabled:
+                        self.obs_websockets_manager.set_source_visibility(
+                            scene_name=config['obs']['image']['scene_name'],
+                            source_name=config['obs']['image']['source_name'],
+                            source_visible=False
+                        )
+
+                        if config['obs']['head']['enabled']:
+                            self.obs_websockets_manager.set_source_visibility(
+                                scene_name=config['obs']['head']['scene_name'],
+                                source_name=config['obs']['head']['source_name'],
+                                source_visible=False
+                            )
+
+                        if config['obs']['filter']['enabled']:
+                            self.obs_websockets_manager.set_filter_visibility(
+                                source_name=config['obs']['filter']['source_name'],
+                                filter_name=config['obs']['filter']['filter_name'],
+                                filter_enabled=False
+                            )
+
                     print("[green]AI response played back.[/green]")
                     self.audio_manager.unload_audio(file_path)
                 else:
@@ -78,13 +140,12 @@ def setup_obs():
             )
             obs.connect()
             print("[green]Connected to OBS WebSocket successfully[/green]")
+            return obs, requests
         except Exception as e:
             print(f"[red]Error connecting to OBS WebSocket: {e}[/red]")
-            obs = None
+            return None, None
     else:
-        obs = None  # OBS not used
-
-    return obs
+        return None, None  # OBS not used
 
 def load_config():
     """Load configuration from YAML file."""
@@ -100,7 +161,5 @@ def load_config():
 
 if __name__ == '__main__':
     config = load_config()
-    obs = setup_obs()
     app = AIChatApp()
-    print("[green]AI Chat App initialized successfully.[/green]")
     app.begin_conversation()
