@@ -19,8 +19,8 @@ class AIChatApp:
         self.audio_manager = AudioManager()
         self.google_tts_manager = GoogleTTSManager(language=config['tts']['language'])
         self.polly_tts_manager = PollyTTSManager(
-            aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
-            aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
+            aws_access_key_id=os.getenv("AMAZON_POLLY_ACCESS_KEY_ID"),
+            aws_secret_access_key=os.getenv("AMAZON_POLLY_SECRET_ACCESS_KEY"),
             region_name=config['tts']['region']
         )
         self.gemini_ai_manager = GeminiAIManager(
@@ -66,7 +66,7 @@ class AIChatApp:
 def setup_obs():
     """Setup OBS WebSocket connection if enabled."""
 
-    if os.getenv('USE_OBS_WEBSOCKET', '0') == '1':
+    if config['obs']['enabled'] == True:
         from obswebsocket import obsws, requests
         obs = None  # Global OBS instance
         try:

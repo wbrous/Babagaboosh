@@ -18,7 +18,7 @@ class PollyTTSManager:
             'deep': ['<prosody pitch="-30%">', '</prosody>'],
             'deeper': ['<amazon:effect vocal-tract-length="+80%">', '</amazon:effect>'],
             'drunk': ['<prosody rate="x-slow">', '</prosody>'],
-            'asthma': ['<amazon:auto-breaths volume="x-loud" frequency="x-high", duration="x-short">', '</amazon:auto-breaths>'],
+            'asthma': ['<amazon:auto-breaths volume="x-loud" frequency="x-high" duration="x-short">', '</amazon:auto-breaths>'],
             'soft': ['<prosody volume="x-soft">', '</prosody>'],
             'loud': ['<prosody volume="x-loud">', '</prosody>'],
             'whisper': ['<amazon:effect name="whispered">', '</amazon:effect>'],
@@ -42,7 +42,10 @@ class PollyTTSManager:
             
             # Add the marker
             emotion = match.group(1).lower()
-            if emotion in emotions:
+            # Handle special '(normal)' to close current effects
+            if emotion == 'normal':
+                parts.append({'type': 'emotion', 'emotion': 'normal'})
+            elif emotion in emotions:
                 parts.append({
                     'type': 'emotion',
                     'emotion': emotion
@@ -66,14 +69,17 @@ class PollyTTSManager:
                 result.append(part['content'])
             elif part['type'] == 'emotion':
                 emotion = part['emotion']
-                
-                # Handle the emotion
-                if emotion in emotions:
+                # If 'normal', close any active effect and return to normal speech
+                if emotion == 'normal':
+                    if current_effect:
+                        result.append(emotions[current_effect][1])
+                        current_effect = None
+                # Standard SSML effect
+                elif emotion in emotions:
                     if isinstance(emotions[emotion], list):
                         # If we have an active effect, close it
                         if current_effect:
                             result.append(emotions[current_effect][1])
-                        
                         # Open the new effect
                         result.append(emotions[emotion][0])
                         current_effect = emotion
