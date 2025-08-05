@@ -24,9 +24,9 @@ class AIChatApp:
         self.obs_enabled = self.config['obs']['enabled']
         if self.obs_enabled:
             self.obs_websockets_manager = OBSWebsocketsManager(
-                host=self.config['obs']['host'],
-                port=self.config['obs']['port'],
-                password=lambda: self.config['obs']['password'] if self.config['obs']['enabled'] else ''
+                host=os.getenv("OBS_WEBSOCKET_URL"),
+                port=int(os.getenv("OBS_WEBSOCKET_PORT", 4455)),
+                password=lambda: os.getenv("OBS_WEBSOCKET_PASSWORD") if os.getenv("USE_OBS_WEBSOCKET_PASSWORD", "0") == "1" else None
             )
         else:
             print("[yellow]OBS WebSocket is disabled in the self.configuration.[/yellow]")

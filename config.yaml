@@ -47,15 +47,15 @@ stt:
   model: "base"
   language: "en"
 obs:
-  enabled: false
+  enabled: true
   image:
-    scene_name: "YourSceneNameHere"
-    source_name: "YourImageSourceNameHere"
+    scene_name: "Scene"
+    source_name: "AiMan"
   head:
     enabled: false
-    scene_name: "YourSceneNameHere"
-    source_name: "YourHeadSourceNameHere"
+    scene_name: "AiMan"
+    source_name: "Man 1 Head"
   filter:
-    enabled: false
-    source_name: "YourSourceNameHere"
-    filter_name: "YourFilterNameHere"
+    enabled: true
+    source_name: "macOS Screen Capture"
+    filter_name: "Audio Move"
