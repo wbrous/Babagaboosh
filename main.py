@@ -23,10 +23,12 @@ class AIChatApp:
         self.speech_to_text = SpeechToText(self.config['stt']['model'], self.config['stt']['language'])
         self.obs_enabled = self.config['obs']['enabled']
         if self.obs_enabled:
+            # Determine password only once, not via lambda
+            obs_password = os.getenv("OBS_WEBSOCKET_PASSWORD") if os.getenv("USE_OBS_WEBSOCKET_PASSWORD", "0") == "1" else None
             self.obs_websockets_manager = OBSWebsocketsManager(
                 host=os.getenv("OBS_WEBSOCKET_URL"),
                 port=int(os.getenv("OBS_WEBSOCKET_PORT", 4455)),
-                password=lambda: os.getenv("OBS_WEBSOCKET_PASSWORD") if os.getenv("USE_OBS_WEBSOCKET_PASSWORD", "0") == "1" else None
+                password=obs_password
             )
         else:
             print("[yellow]OBS WebSocket is disabled in the self.configuration.[/yellow]")
