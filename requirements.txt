@@ -1,5 +1,4 @@
-google
-google.genai
+google-genai
 rich
-dotenv
+python-dotenv
 obs-websocket-py
