@@ -20,12 +20,18 @@ python --version
 
 Make sure you have Python 3.10 or higher installed. If not, download it from [python.org](https://www.python.org/downloads/).
 
-### 2. Create a Virtual Environment
+### 2. Clone the Repository
+```zsh
+git clone https://github.com/wbrous/Babagaboosh.git
+cd Babagaboosh
+```
+
+### 3. Create a Virtual Environment
 ```zsh
 python -m venv .venv
 ```
 
-### 3. Activate the Virtual Environment
+### 4. Activate the Virtual Environment
 - On Windows:
 ```zsh
 .venv\Scripts\activate
@@ -35,12 +41,12 @@ python -m venv .venv
 source .venv/bin/activate
 ```
 
-### 4. Install Dependencies
+### 5. Install Dependencies
 ```zsh
 pip install -r requirements.txt
 ```
 
-### 5. Configure Your Environment
+### 6. Configure Your Environment
 Copy the `.env.example` file to `.env` and fill in the required environment variables:
 ```zsh
 cp .env.example .env
