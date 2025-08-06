@@ -57,5 +57,5 @@ obs:
     source_name: "Man 1 Head"
   filter:
     enabled: true
-    source_name: "macOS Screen Capture"
+    source_name: "macOS Audio Capture"
     filter_name: "Audio Move"

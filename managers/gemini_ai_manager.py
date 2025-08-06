@@ -169,4 +169,5 @@ class GeminiAIManager:
         except Exception as e:
             if "overloaded" in str(e).lower() or "rate limit" in str(e).lower():
                 print(f"[red]Model appears to be overloaded or rate limited: {e}[/red]")
+                return "I'm currently overloaded, please try again later."
             raise RuntimeError(f"Failed to generate response: {e}")

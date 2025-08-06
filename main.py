@@ -92,8 +92,8 @@ class AIChatApp:
                             )
 
                         self.obs_websockets_manager.set_filter_visibility(
-                            source_name=self.config['obs']['image']['source_name'],
-                            filter_name=self.config['obs']['image']['filter_name'],
+                            source_name=self.config['obs']['filter']['source_name'],
+                            filter_name=self.config['obs']['filter']['filter_name'],
                             filter_enabled=True
                         )
                     
