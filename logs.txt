@@ -1,0 +1,9 @@
+[33mInitializing AI Chat App[0m[33m...[0m
+[32mAI Chat App initialized successfully.[0m
+[33mStarting conversation with AI[0m[33m...[0m
+
+[32mPress F4 to start recording[0m[32m...[0m
+[32m--- Ready for input ---[0m
+[33mListening[0m[33m...[0m[33m Speak now![0m
+
+[33mShutting down[0m[33m...[0m

@@ -128,7 +128,7 @@ class AIChatApp:
                     print("[red]No clear speech detected. Please try speaking again...[/red]")
 
         except KeyboardInterrupt:
-            print("\nShutting down...")
+            print("\n[yellow]Shutting down...[/yellow]")
             self.speech_to_text.shutdown()
         except Exception as e:
             print(f"[red]Error: {e}[/red]")
