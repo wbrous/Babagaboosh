@@ -13,6 +13,8 @@ dotenv.load_dotenv(
     override=True
 )
 
+os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
+
 class AIChatApp:
     def __init__(self):
         """Initialize the AI Chat Application."""
