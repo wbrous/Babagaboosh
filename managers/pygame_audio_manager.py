@@ -1,7 +1,7 @@
 import pygame
 import os
 
-class AudioManager:
+class PygameAudioManager:
     def __init__(self):
         pygame.mixer.init()
         self.audio_files = {}  # Dictionary to store audio files by their relative path

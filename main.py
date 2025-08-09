@@ -18,9 +18,9 @@ class AIChatApp:
         """Initialize the AI Chat Application."""
         print("[yellow]Initializing AI Chat App...[/yellow]")
         self.config = load_config()
-        self.audio_manager = AudioManager()
+        self.audio_manager = PygameAudioManager()
         self.google_tts_manager = GoogleTTSManager(language=self.config['tts']['language'])
-        self.speech_to_text = SpeechToText(self.config['stt']['model'], self.config['stt']['language'])
+        self.speech_to_text = SpeechToTextManager(self.config['stt']['model'], self.config['stt']['language'])
         self.obs_enabled = self.config['obs']['enabled']
         if self.obs_enabled:
             # Determine password only once, not via lambda
@@ -46,12 +46,11 @@ class AIChatApp:
 
         print("[green]AI Chat App initialized successfully.[/green]")
 
-        self.audio_manager.load_audio(os.path.join(os.path.dirname(__file__), 'start.mp3'))
-        self.audio_manager.play_audio(os.path.join(os.path.dirname(__file__), 'start.mp3'))
-        time.sleep(self.audio_manager.get_audio_length(os.path.join(os.path.dirname(__file__), 'start.mp3')))
-        self.audio_manager.unload_audio(os.path.join(os.path.dirname(__file__), 'start.mp3'), remove=False)
+        self.audio_manager.load_audio(os.path.join(os.path.dirname(__file__), 'audio', 'start.mp3'))
+        self.audio_manager.play_audio(os.path.join(os.path.dirname(__file__), 'audio', 'start.mp3'))
+        time.sleep(self.audio_manager.get_audio_length(os.path.join(os.path.dirname(__file__), 'audio', 'start.mp3')))
+        self.audio_manager.unload_audio(os.path.join(os.path.dirname(__file__), 'audio', 'start.mp3'), remove=False)
 
-    
     def begin_conversation(self):
         print("[yellow]Starting conversation with AI...[/yellow]")
         try:
