@@ -4,7 +4,6 @@ import time
 import yaml
 import dotenv
 import keyboard
-from managers import *
 
 from rich import print
 
@@ -14,6 +13,8 @@ dotenv.load_dotenv(
 )
 
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
+
+from managers import *
 
 class AIChatApp:
     def __init__(self):
